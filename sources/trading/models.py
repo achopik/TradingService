@@ -91,8 +91,54 @@ class Offer(models.Model):
 
 class Balance(models.Model):
     """ Shows the amount of certain currency for user """
+
     user = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE)
     currency = models.ForeignKey(Currency, blank=False, null=True, on_delete=models.SET_NULL)
     amount = models.DecimalField(max_digits=30, decimal_places=3, default=0)
 
 
+class Inventory(models.Model):
+    """ Shows the number of stocks a particular user has """
+
+    user = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, blank=False, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField("Stocks quantity", default=0)
+
+
+class Trade(models.Model):
+    """ Info about a certain transaction """
+    item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.SET_NULL)
+    seller = models.ForeignKey(
+        User,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='seller_trade',
+        related_query_name='seller_trade',
+    )
+    buyer = models.ForeignKey(
+        User,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='buyer_trade',
+        related_query_name='buyer_trade',
+    )
+    quantity = models.PositiveIntegerField()
+    unit_price = models.DecimalField(max_digits=7, decimal_places=2)
+    description = models.TextField(blank=True, null=True)
+    seller_offer = models.ForeignKey(
+        Offer,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='seller_trade',
+        related_query_name='seller_trade',)
+    buyer_offer = models.ForeignKey(
+        Offer,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='buyer_trade',
+        related_query_name='buyer_trade',
+    )

@@ -27,15 +27,15 @@ services:
       - redis
     restart: on-failure
 
-  celery:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: celery -A project worker --loglevel=info
-    env_file:
-      - ./.env.dev
-    volumes:
-      - .:/usr/src/app/
-    depends_on:
-      - redis
-    restart: on-failure
+#  celery:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    command: celery -A project worker --loglevel=info
+#    env_file:
+#      - ./.env.dev
+#    volumes:
+#      - .:/usr/src/app/
+#    depends_on:
+#      - redis
+#    restart: on-failure

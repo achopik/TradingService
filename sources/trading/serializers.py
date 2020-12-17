@@ -12,8 +12,6 @@ from trading.models import (
     Balance
 )
 
-# Сериализаторы ещё перепишу
-
 
 class UserSerializer(serializers.ModelSerializer):
 

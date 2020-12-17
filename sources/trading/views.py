@@ -9,7 +9,7 @@ from trading.serializers import (
     OfferSerializer,
     InventorySerializer,
     PriceSerializer,
-    BalanceSerializer
+    BalanceSerializer,
 )
 
 from trading.models import (
@@ -20,17 +20,20 @@ from trading.models import (
     Offer,
     Inventory,
     Price,
-    Balance
+    Balance,
 )
 
 
-class BaseViewSet(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin,
-                  viewsets.GenericViewSet):
+class BaseViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
     """ Provides basic behavior for all API endpoints """
+
     pass
 
 

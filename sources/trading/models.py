@@ -62,7 +62,7 @@ class Price(models.Model):
 
     price = models.DecimalField(max_digits=7, decimal_places=2)
 
-    date = models.DateTimeField(unique=True, blank=True)
+    date = models.DateTimeField(unique=True, blank=True, auto_now_add=True)
 
     def __str__(self):
         return f'{self.price} {self.currency.code}'

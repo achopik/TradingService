@@ -50,21 +50,6 @@ INSTALLED_APPS = [
 
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ),
-}
-
-JWT_EXPIRATION_TIME = datetime.timedelta(days=14)
-
-JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': JWT_EXPIRATION_TIME
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -159,3 +144,19 @@ CELERY_RESULT_BACKEND = 'redis://redis:6379'
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
+}
+
+JWT_EXPIRATION_TIME = datetime.timedelta(days=14)
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': JWT_EXPIRATION_TIME
+}

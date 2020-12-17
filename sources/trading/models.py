@@ -62,7 +62,7 @@ class Price(models.Model):
 
     price = models.DecimalField(max_digits=7, decimal_places=2)
 
-    date = models.DateTimeField(unique=True, blank=True)
+    date = models.DateTimeField(unique=True, blank=True, auto_now_add=True)
 
     def __str__(self):
         return f'{self.price} {self.currency.code}'
@@ -71,7 +71,7 @@ class Price(models.Model):
 class WatchList(models.Model):
     """ User's favorites """
 
-    user = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, blank=False, on_delete=models.CASCADE)
     item = models.ManyToManyField(Item, related_name='watchlist', blank=True)
 
 
@@ -81,10 +81,25 @@ class Offer(models.Model):
     def __str__(self):
         return f"{self.order_type}: {self.item}"
 
-    item = models.ForeignKey(Item, blank=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User,
+        blank=False,
+        on_delete=
+        models.CASCADE,
+        default=User.objects.first().id
+    )
+    item = models.ForeignKey(
+        Item,
+        blank=False,
+        on_delete=models.CASCADE
+    )
     entry_quantity = models.PositiveIntegerField("Requested quantity")
     quantity = models.PositiveIntegerField("Actual quantity")
-    order_type = models.CharField(choices=OrderType.choices(), default=OrderType.S, max_length=2)
+    order_type = models.CharField(
+        choices=OrderType.choices(),
+        default=OrderType.S,
+        max_length=2
+    )
     price = models.DecimalField(max_digits=7, decimal_places=2)
     is_active = models.BooleanField(default=True)
 
@@ -92,8 +107,18 @@ class Offer(models.Model):
 class Balance(models.Model):
     """ Shows the amount of certain currency for user """
 
-    user = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE)
-    currency = models.ForeignKey(Currency, blank=False, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(
+        User,
+        blank=False,
+        null=False,
+        on_delete=models.CASCADE
+    )
+    currency = models.ForeignKey(
+        Currency,
+        blank=False,
+        null=True,
+        on_delete=models.SET_NULL
+    )
     amount = models.DecimalField(max_digits=30, decimal_places=3, default=0)
 
 

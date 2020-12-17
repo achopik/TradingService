@@ -71,7 +71,7 @@ class Price(models.Model):
 class WatchList(models.Model):
     """ User's favorites """
 
-    user = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, blank=False, on_delete=models.CASCADE)
     item = models.ManyToManyField(Item, related_name='watchlist', blank=True)
 
 

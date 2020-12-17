@@ -64,12 +64,11 @@ class BaseSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
         queryset=User.objects.all(),
         slug_field='id',
-        many=False
     )
+
     item = serializers.SlugRelatedField(
         queryset=Item.objects.all(),
         slug_field='name',
-        many=False
     )
 
 
@@ -80,10 +79,18 @@ class WatchListSerializer(serializers.ModelSerializer):
         source='user',
         queryset=User.objects.all(),
         slug_field='id',
+        write_only=True,
     )
     item = ItemSerializer(
         many=True,
-        read_only=True
+        read_only=True,
+    )
+    item_codes = serializers.SlugRelatedField(
+        source='item',
+        queryset=Item.objects.all(),
+        slug_field='id',
+        many=True,
+        write_only=True
     )
 
     class Meta:

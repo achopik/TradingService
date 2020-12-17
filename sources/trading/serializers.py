@@ -31,10 +31,12 @@ class CurrencySerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
 
-    currency = serializers.SlugRelatedField(
+    currency = CurrencySerializer(read_only=True)
+    currency_code = serializers.SlugRelatedField(
+        source='currency',
         queryset=Currency.objects.all(),
-        slug_field='code',
-        many=False
+        slug_field='id',
+        write_only=True
     )
 
     class Meta:
@@ -44,15 +46,20 @@ class ItemSerializer(serializers.ModelSerializer):
 
 class PriceSerializer(serializers.ModelSerializer):
 
-    item = serializers.SlugRelatedField(
+    item = ItemSerializer(read_only=True)
+    item_code = serializers.SlugRelatedField(
+        source='item',
         queryset=Item.objects.all(),
-        slug_field='code',
-        many=False
+        slug_field='id',
+        write_only=True
     )
-    currency = serializers.SlugRelatedField(
+
+    currency = CurrencySerializer(read_only=True)
+    currency_code = serializers.SlugRelatedField(
+        source='currency',
         queryset=Currency.objects.all(),
-        slug_field='code',
-        many=False
+        slug_field='id',
+        write_only=True,
     )
 
     class Meta:

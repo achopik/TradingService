@@ -102,7 +102,6 @@ class BalanceViewSet(
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
-
 ):
 
     queryset = Balance.objects.all()

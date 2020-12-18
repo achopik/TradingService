@@ -13,7 +13,6 @@ from trading.views import (
     PriceViewSet,
     TradeViewSet,
     WatchListViewSet,
-
 )
 
 

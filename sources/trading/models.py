@@ -1,7 +1,7 @@
 from enum import Enum
 
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class OrderType(Enum):
@@ -43,7 +43,12 @@ class Item(CodeBase):
     currency = models.ForeignKey(
         Currency, blank=True, on_delete=models.SET_DEFAULT, default=1
     )
-    details = models.TextField("Details", blank=True, null=True, max_length=512)
+    details = models.TextField(
+        "Details",
+        blank=True,
+        null=True,
+        max_length=512
+    )
 
     def __str__(self):
         return self.code
@@ -85,7 +90,10 @@ class Offer(models.Model):
         return f"{self.order_type}: {self.item}"
 
     user = models.ForeignKey(
-        User, blank=False, on_delete=models.CASCADE, default=User.objects.first().id
+        User,
+        blank=False,
+        on_delete=models.CASCADE,
+        default=User.objects.first().id
     )
     item = models.ForeignKey(Item, blank=False, on_delete=models.CASCADE)
     entry_quantity = models.PositiveIntegerField("Requested quantity")
@@ -100,7 +108,12 @@ class Offer(models.Model):
 class Balance(models.Model):
     """ Shows the amount of certain currency for user """
 
-    user = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User,
+        blank=False,
+        null=False,
+        on_delete=models.CASCADE
+    )
     currency = models.ForeignKey(
         Currency, blank=False, null=True, on_delete=models.SET_NULL
     )
@@ -118,7 +131,12 @@ class Inventory(models.Model):
 class Trade(models.Model):
     """ Info about a certain transaction """
 
-    item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.SET_NULL)
+    item = models.ForeignKey(
+        Item,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL
+    )
     seller = models.ForeignKey(
         User,
         blank=True,

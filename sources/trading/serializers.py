@@ -1,14 +1,15 @@
 from rest_framework import serializers
+
 from trading.models import (
-    Currency,
-    Item,
-    Price,
-    WatchList,
-    Trade,
-    Offer,
-    Inventory,
-    User,
     Balance,
+    Currency,
+    Inventory,
+    Item,
+    Offer,
+    Price,
+    Trade,
+    User,
+    WatchList,
 )
 
 
@@ -43,7 +44,10 @@ class PriceSerializer(serializers.ModelSerializer):
 
     item = ItemSerializer(read_only=True)
     item_id = serializers.SlugRelatedField(
-        source="item", queryset=Item.objects.all(), slug_field="id", write_only=True
+        source="item",
+        queryset=Item.objects.all(),
+        slug_field="id",
+        write_only=True
     )
 
     currency = CurrencySerializer(read_only=True)
@@ -89,12 +93,18 @@ class BaseSerializer(serializers.ModelSerializer):
 
     user = UserSerializer(read_only=True)
     user_id = serializers.SlugRelatedField(
-        source="user", queryset=User.objects.all(), slug_field="id", write_only=True
+        source="user",
+        queryset=User.objects.all(),
+        slug_field="id",
+        write_only=True
     )
 
     item = ItemSerializer(read_only=True)
     item_id = serializers.SlugRelatedField(
-        source="item", queryset=Item.objects.all(), slug_field="code", write_only=True
+        source="item",
+        queryset=Item.objects.all(),
+        slug_field="code",
+        write_only=True
     )
 
 
@@ -128,7 +138,10 @@ class BalanceSerializer(serializers.ModelSerializer):
 
     user = UserSerializer(read_only=True)
     user_id = serializers.SlugRelatedField(
-        source="user", slug_field="id", queryset=User.objects.all(), write_only=True
+        source="user",
+        slug_field="id",
+        queryset=User.objects.all(),
+        write_only=True
     )
     currency = CurrencySerializer(read_only=True)
     currency_id = serializers.SlugRelatedField(

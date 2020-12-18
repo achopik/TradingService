@@ -1,85 +1,109 @@
 from rest_framework import mixins
 from rest_framework import viewsets
 
-from trading.serializers import (
-    CurrencySerializer,
-    TradeSerializer,
-    ItemSerializer,
-    WatchListSerializer,
-    OfferSerializer,
-    InventorySerializer,
-    PriceSerializer,
-    BalanceSerializer,
-)
-
 from trading.models import (
+    Balance,
     Currency,
+    Inventory,
     Item,
+    Offer,
+    Price,
     Trade,
     WatchList,
-    Offer,
-    Inventory,
-    Price,
-    Balance,
+)
+from trading.serializers import (
+    BalanceSerializer,
+    CurrencySerializer,
+    InventorySerializer,
+    ItemSerializer,
+    OfferSerializer,
+    PriceSerializer,
+    TradeSerializer,
+    WatchListSerializer,
 )
 
 
-class BaseViewSet(
-    mixins.ListModelMixin,
+class CurrencyViewSet(
     mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
     mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    """ Provides basic behavior for all API endpoints """
-
-    pass
-
-
-class CurrencyViewSet(BaseViewSet):
 
     queryset = Currency.objects.all()
     serializer_class = CurrencySerializer
 
 
-class ItemViewSet(BaseViewSet):
+class ItemViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
 
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
 
-class PriceViewSet(BaseViewSet):
+class PriceViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
 
     queryset = Price.objects.all()
     serializer_class = PriceSerializer
 
 
-class WatchListViewSet(BaseViewSet):
+class WatchListViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
 
     queryset = WatchList.objects.all()
     serializer_class = WatchListSerializer
 
 
-class OfferViewSet(BaseViewSet):
+class OfferViewSet(
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
 
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
 
 
-class InventoryViewSet(BaseViewSet):
+class InventoryViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
 
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
 
 
-class TradeViewSet(BaseViewSet):
+class TradeViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
 
     queryset = Trade.objects.all()
     serializer_class = TradeSerializer
 
 
-class BalanceViewSet(BaseViewSet):
+class BalanceViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+
+):
 
     queryset = Balance.objects.all()
     serializer_class = BalanceSerializer

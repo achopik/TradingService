@@ -7,8 +7,8 @@ from django.db import models
 class OrderType(Enum):
     """ Choices for offers """
 
-    S = "Sell"
-    B = "Buy"
+    SELL = "Sell"
+    BUY = "Buy"
 
     @classmethod
     def choices(cls):
@@ -91,7 +91,7 @@ class Offer(models.Model):
     entry_quantity = models.PositiveIntegerField("Requested quantity")
     quantity = models.PositiveIntegerField("Actual quantity")
     order_type = models.CharField(
-        choices=OrderType.choices(), default=OrderType.S, max_length=2
+        choices=OrderType.choices(), default=OrderType.SELL, max_length=4
     )
     price = models.DecimalField(max_digits=7, decimal_places=2)
     is_active = models.BooleanField(default=True)

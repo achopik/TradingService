@@ -151,6 +151,8 @@ REST_FRAMEWORK = {
     ),
 }
 
-JWT_EXPIRATION_TIME = datetime.timedelta(days=14)
+JWT_EXPIRATION_TIME = datetime.timedelta(
+    days=int(os.environ.get("JWT_EXP_DAYS"))
+)
 
 JWT_AUTH = {"JWT_EXPIRATION_DELTA": JWT_EXPIRATION_TIME}

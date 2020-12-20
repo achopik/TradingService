@@ -93,8 +93,8 @@ class Migration(migrations.Migration):
                 (
                     "order_type",
                     models.CharField(
-                        choices=[("S", "Sell"), ("B", "Buy")],
-                        default=trading.models.OrderType["S"],
+                        choices=[("SELL", "Sell"), ("BUY", "Buy")],
+                        default=trading.models.OrderType["SELL"],
                         max_length=2,
                     ),
                 ),

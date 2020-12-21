@@ -1,20 +1,16 @@
-from django.urls import path
-
-from rest_framework.routers import SimpleRouter
-
 import rest_framework_simplejwt.views as jwt_views
-
+from django.urls import path
+from rest_framework.routers import SimpleRouter
 from trading.views import (
     BalanceViewSet,
-    CurrencyViewSet,
+    CurrencyViewSet, 
     InventoryViewSet,
     ItemViewSet,
     OfferViewSet,
     PriceViewSet,
     TradeViewSet,
-    WatchListViewSet,
+    WatchListViewSet
 )
-
 
 router = SimpleRouter()
 router.register("currency", CurrencyViewSet)

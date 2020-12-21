@@ -12,8 +12,8 @@ then
 fi
 
 sleep 3
-py.test
 python sources/manage.py migrate
+py.test
 python sources/manage.py runserver 0.0.0.0:8000
 
 exec "$@"

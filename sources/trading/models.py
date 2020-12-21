@@ -1,14 +1,14 @@
 from enum import Enum
 
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class OrderType(Enum):
     """ Choices for offers """
 
-    S = 'Sell'
-    B = 'Buy'
+    SELL = "Sell"
+    BUY = "Buy"
 
     @classmethod
     def choices(cls):
@@ -32,15 +32,17 @@ class Currency(CodeBase):
         return self.code
 
     class Meta:
-        verbose_name = 'Currency'
-        verbose_name_plural = 'Currencies'
+        verbose_name = "Currency"
+        verbose_name_plural = "Currencies"
 
 
 class Item(CodeBase):
     """ Stock model """
 
     price = models.DecimalField(max_digits=7, decimal_places=2)
-    currency = models.ForeignKey(Currency, blank=True, on_delete=models.SET_DEFAULT, default=1)
+    currency = models.ForeignKey(
+        Currency, blank=True, on_delete=models.SET_DEFAULT, default=1
+    )
     details = models.TextField("Details", blank=True, null=True, max_length=512)
 
     def __str__(self):
@@ -50,29 +52,30 @@ class Item(CodeBase):
 class Price(models.Model):
     """ Price of a particular Item """
 
-    item = models.ForeignKey(Item,
-                             on_delete=models.CASCADE,
-                             related_name='prices',
-                             related_query_name='prices')
+    item = models.ForeignKey(
+        Item,
+        on_delete=models.CASCADE,
+        related_name="prices",
+        related_query_name="prices",
+    )
 
-    currency = models.ForeignKey(Currency,
-                                 on_delete=models.SET_DEFAULT,
-                                 blank=True,
-                                 default=1)
+    currency = models.ForeignKey(
+        Currency, on_delete=models.SET_DEFAULT, blank=True, default=1
+    )
 
     price = models.DecimalField(max_digits=7, decimal_places=2)
 
-    date = models.DateTimeField(unique=True, blank=True)
+    date = models.DateTimeField(unique=True, blank=True, auto_now_add=True)
 
     def __str__(self):
-        return f'{self.price} {self.currency.code}'
+        return f"{self.price} {self.currency.code}"
 
 
 class WatchList(models.Model):
     """ User's favorites """
 
-    user = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
-    item = models.ManyToManyField(Item, related_name='watchlist', blank=True)
+    user = models.OneToOneField(User, blank=False, on_delete=models.CASCADE)
+    item = models.ManyToManyField(Item, related_name="watchlist", blank=True)
 
 
 class Offer(models.Model):
@@ -81,10 +84,15 @@ class Offer(models.Model):
     def __str__(self):
         return f"{self.order_type}: {self.item}"
 
+    user = models.ForeignKey(
+        User, blank=False, on_delete=models.CASCADE, default=User.objects.first().id
+    )
     item = models.ForeignKey(Item, blank=False, on_delete=models.CASCADE)
     entry_quantity = models.PositiveIntegerField("Requested quantity")
     quantity = models.PositiveIntegerField("Actual quantity")
-    order_type = models.CharField(choices=OrderType.choices(), default=OrderType.S, max_length=2)
+    order_type = models.CharField(
+        choices=OrderType.choices(), default=OrderType.SELL, max_length=4
+    )
     price = models.DecimalField(max_digits=7, decimal_places=2)
     is_active = models.BooleanField(default=True)
 
@@ -93,7 +101,9 @@ class Balance(models.Model):
     """ Shows the amount of certain currency for user """
 
     user = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE)
-    currency = models.ForeignKey(Currency, blank=False, null=True, on_delete=models.SET_NULL)
+    currency = models.ForeignKey(
+        Currency, blank=False, null=True, on_delete=models.SET_NULL
+    )
     amount = models.DecimalField(max_digits=30, decimal_places=3, default=0)
 
 
@@ -107,22 +117,23 @@ class Inventory(models.Model):
 
 class Trade(models.Model):
     """ Info about a certain transaction """
+
     item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.SET_NULL)
     seller = models.ForeignKey(
         User,
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='seller_trade',
-        related_query_name='seller_trade',
+        related_name="seller_trade",
+        related_query_name="seller_trade",
     )
     buyer = models.ForeignKey(
         User,
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='buyer_trade',
-        related_query_name='buyer_trade',
+        related_name="buyer_trade",
+        related_query_name="buyer_trade",
     )
     quantity = models.PositiveIntegerField()
     unit_price = models.DecimalField(max_digits=7, decimal_places=2)
@@ -132,13 +143,14 @@ class Trade(models.Model):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='seller_trade',
-        related_query_name='seller_trade',)
+        related_name="seller_trade",
+        related_query_name="seller_trade",
+    )
     buyer_offer = models.ForeignKey(
         Offer,
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='buyer_trade',
-        related_query_name='buyer_trade',
+        related_name="buyer_trade",
+        related_query_name="buyer_trade",
     )

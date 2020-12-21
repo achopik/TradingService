@@ -125,20 +125,9 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-CELERY_BROKER_URL = "redis://redis:6379"
-
-CELERY_ACCEPT_CONTENT = ["application/json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
-
-CELERY_RESULT_BACKEND = "redis://redis:6379"
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
-
 STATIC_URL = "/static/"
+
+# 3rd party modules configs
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -154,4 +143,13 @@ JWT_EXPIRATION_TIME = datetime.timedelta(
     days=int(os.environ.get("JWT_EXP_DAYS"))
 )
 
+
 JWT_AUTH = {"JWT_EXPIRATION_DELTA": JWT_EXPIRATION_TIME}
+
+CELERY_BROKER_URL = "redis://redis:6379"
+
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+
+CELERY_RESULT_BACKEND = "redis://redis:6379"

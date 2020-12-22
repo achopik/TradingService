@@ -75,9 +75,10 @@ def _change_price(item_id: int, new_price: float):
     price.save()
 
 
-def _create_trade(seller_offer_id: int, buyer_offer_id: int):
+def _create_trade(seller_offer_id: int, buyer_offer_id: int) -> Optional[int]:
     """
     Creates a trade using sell and buy offers
+    Returns trade id, if creation was successful, else None
     """
 
     seller_offer = Offer.objects.get(pk=seller_offer_id)
@@ -87,9 +88,45 @@ def _create_trade(seller_offer_id: int, buyer_offer_id: int):
     trade.seller = seller_offer.user
     trade.buyer = buyer_offer.user
     trade.item = seller_offer.item
-    trade.unit_price = seller_offer.unit_price
+    trade.unit_price = sum(seller_offer.price, buyer_offer.price) / 2
     trade.quantity = min(
         (seller_offer.entry_quantity - seller_offer.actual_quantity),
         (buyer_offer.entry_quantity - buyer_offer.actual_quantity),
     )
+    amount = trade.quantity * trade.unit_price
+    try:
+        assert (
+            _check_balance(trade.buyer.id, trade.item.currency.id) >= amount
+        ), "Buyer has not enough currency"
+
+        assert (
+            _check_inventory(trade.seller.id, trade.item.id) >= trade.quantity
+        ), "Seller has not enough items in inventory"
+    except AssertionError:
+        trade.delete()
+        return
     trade.save()
+    return trade.id
+
+
+# ВАЖНАЯ ФУНКЦИЯ, СЛЕДИТЬ ЗА ОТБОРОМ ДАННЫХ #
+
+
+def find_pair_offer(first_offer_id: int):
+
+    first_offer = Offer.objects.get(id=first_offer_id)
+    second_offer = Offer.objects.exclude(
+        order_type=first_offer.order_type,
+        is_active=False,
+        user=first_offer.user
+    )
+    if first_offer.order_type == 'SELL':
+        second_offer = second_offer.order_by('price').first()
+        print(second_offer)
+        if second_offer.price >= first_offer.price:
+            return second_offer.id
+    else:
+        second_offer = second_offer.order_by('-price').first()
+        print(second_offer)
+        if second_offer.price <= first_offer.price:
+            return second_offer.id

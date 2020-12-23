@@ -9,7 +9,7 @@ from trading.models import (
     Price,
     Trade,
     User,
-    WatchList
+    WatchList,
 )
 
 

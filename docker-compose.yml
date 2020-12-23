@@ -38,6 +38,4 @@ services:
       - .:/usr/src/app/
     depends_on:
       - web
-      - db
-      - redis
     restart: on-failure

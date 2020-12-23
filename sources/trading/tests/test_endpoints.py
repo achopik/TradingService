@@ -1,10 +1,8 @@
-from django.urls import reverse
-
 import pytest
-
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-
+from trading.models import Balance, Inventory
 
 pytestmark = pytest.mark.django_db
 
@@ -52,7 +50,7 @@ class ItemTest(APITestCase):
 @pytest.mark.usefixtures("watchlist_obj")
 class WatchListTest(APITestCase):
 
-    url = reverse("watchlist-detail", args=['1'])
+    url = reverse("watchlist-detail", args=["1"])
 
     def test_watchlist_endpoint_available(self):
         """
@@ -91,46 +89,6 @@ class PriceTest(APITestCase):
         self.assertGreater(len(response.data[0]), 3)
 
 
-@pytest.mark.usefixtures("inventory_obj")
-class InventoryTest(APITestCase):
-
-    url = reverse("inventory-detail", args=['1'])
-
-    def test_inventory_endpoint_available(self):
-        """
-        Checks if we can use Inventory endpoint without errors
-        """
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_inventory_detail(self):
-        """
-        Checks if endpoint "inventory detail" sends data
-        """
-        response = self.client.get(self.url)
-        self.assertGreater(len(response.data), 1)
-
-
-@pytest.mark.usefixtures("balance_obj")
-class BalanceTest(APITestCase):
-
-    url = reverse("balance-detail", args=['1'])
-
-    def test_inventory_endpoint_available(self):
-        """
-        Checks if we can use Balance endpoint without errors
-        """
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_inventory_detail(self):
-        """
-        Checks if endpoint "balance list" sends data
-        """
-        response = self.client.get(self.url)
-        self.assertGreater(len(response.data), 1)
-
-
 @pytest.mark.usefixtures("offer_obj")
 class OfferTest(APITestCase):
 
@@ -138,14 +96,14 @@ class OfferTest(APITestCase):
 
     def test_offer_endpoint_available(self):
         """
-        Checks if we can use Balance endpoint without errors
+        Checks if we can use Offer endpoint without errors
         """
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_inventory_list(self):
+    def test_offer_list(self):
         """
-        Checks if endpoint "balance list" sends data
+        Checks if endpoint "offer list" sends data
         """
         response = self.client.get(self.url)
         self.assertGreater(len(response.data[0]), 3)

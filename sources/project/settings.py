@@ -14,6 +14,7 @@ import datetime
 import os
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,9 +41,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "trading",
+
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework.authtoken",
+    "django_celery_beat",
 ]
 
 
@@ -151,3 +154,11 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 
 CELERY_RESULT_BACKEND = "redis://redis:6379"
+
+CELERY_BEAT_SCHEDULE = {
+
+    'search-offers-every-minute': {
+        'task': 'trading.tasks.search_offers',
+        'schedule': 60.0,
+    },
+}

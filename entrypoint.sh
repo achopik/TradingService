@@ -2,7 +2,8 @@
 
 if [ "$DATABASE" = "postgres" ]
 then
-    echo "Waiting for postgres..."
+
+    echo "Waiting for PostgreSQL"
 
     while ! nc -z $SQL_HOST $SQL_PORT; do
       sleep 0.1
@@ -11,8 +12,12 @@ then
     echo "PostgreSQL started"
 fi
 
-sleep 3
 python sources/manage.py migrate
-python sources/manage.py runserver 0.0.0.0:8000
+
+if [ "$DJANGO_SUPERUSER_USERNAME" ]
+then
+    echo "Creating admin..."
+    python sources/manage.py createsuperuser --noinput
+fi
 
 exec "$@"

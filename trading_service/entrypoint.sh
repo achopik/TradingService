@@ -12,7 +12,7 @@ then
     echo "PostgreSQL started"
 fi
 
-python sources/manage.py migrate
+python manage.py migrate
 
 
 

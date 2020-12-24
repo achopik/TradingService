@@ -91,7 +91,7 @@ class Offer(models.Model):
     entry_quantity = models.PositiveIntegerField("Requested quantity")
     quantity = models.PositiveIntegerField("Actual quantity")
     order_type = models.CharField(
-        choices=OrderType.choices(), default=OrderType.SELL, max_length=4
+        choices=OrderType.choices(), default=OrderType.SELL, max_length=6
     )
     price = models.DecimalField(max_digits=7, decimal_places=2)
     is_active = models.BooleanField(default=True)

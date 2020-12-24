@@ -14,6 +14,7 @@ import datetime
 import os
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,9 +41,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "trading",
+
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework.authtoken",
+    "django_celery_beat",
 ]
 
 
@@ -125,20 +128,9 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-CELERY_BROKER_URL = "redis://redis:6379"
-
-CELERY_ACCEPT_CONTENT = ["application/json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
-
-CELERY_RESULT_BACKEND = "redis://redis:6379"
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
-
 STATIC_URL = "/static/"
+
+# 3rd party modules configs
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -150,8 +142,23 @@ REST_FRAMEWORK = {
     ),
 }
 
-JWT_EXPIRATION_TIME = datetime.timedelta(
-    days=int(os.environ.get("JWT_EXP_DAYS"))
-)
+JWT_EXPIRATION_TIME = datetime.timedelta(days=int(os.environ.get("JWT_EXP_DAYS")))
+
 
 JWT_AUTH = {"JWT_EXPIRATION_DELTA": JWT_EXPIRATION_TIME}
+
+CELERY_BROKER_URL = "redis://redis:6379"
+
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+
+CELERY_BEAT_SCHEDULE = {
+
+    'search-offers-every-minute': {
+        'task': 'trading.tasks.search_offers',
+        'schedule': 60.0,
+    },
+}

@@ -10,11 +10,14 @@ services:
   redis:
     image: "redis:alpine"
     hostname: "redis"
+    depends_on:
+      - db
     restart: on-failure
 
   web:
     build: .
     entrypoint: "/usr/src/app/entrypoint.sh"
+    command: python sources/manage.py runserver 0.0.0.0:8000
     container_name: web
     volumes:
       - .:/usr/src/app/
@@ -24,18 +27,16 @@ services:
       - ./.env.dev
     depends_on:
       - db
-      - redis
     restart: on-failure
 
-#  celery:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    command: celery -A project worker --loglevel=info
-#    env_file:
-#      - ./.env.dev
-#    volumes:
-#      - .:/usr/src/app/
-#    depends_on:
-#      - redis
-#    restart: on-failure
+  celery:
+    build: .
+    command: celery --workdir sources/ -A project worker -B --scheduler django -l INFO -f celery_log.txt
+    env_file:
+      - ./.env.dev
+    volumes:
+      - .:/usr/src/app/
+    depends_on:
+      - web
+      - db
+    restart: on-failure

@@ -3,13 +3,13 @@ from django.urls import path
 from rest_framework.routers import SimpleRouter
 from trading.views import (
     BalanceViewSet,
-    CurrencyViewSet, 
+    CurrencyViewSet,
     InventoryViewSet,
     ItemViewSet,
     OfferViewSet,
     PriceViewSet,
     TradeViewSet,
-    WatchListViewSet
+    WatchListViewSet,
 )
 
 router = SimpleRouter()

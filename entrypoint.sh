@@ -14,10 +14,6 @@ fi
 
 python sources/manage.py migrate
 
-if [ "$DJANGO_SUPERUSER_USERNAME" ]
-then
-    echo "Creating admin..."
-    python sources/manage.py createsuperuser --noinput
-fi
+
 
 exec "$@"

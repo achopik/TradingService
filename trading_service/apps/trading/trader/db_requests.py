@@ -146,5 +146,4 @@ def find_pair_offer(first_offer_id: int) -> Optional[int]:
         """
         If pair does not exist, return None
         """
-
         return

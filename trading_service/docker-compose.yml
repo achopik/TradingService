@@ -11,7 +11,6 @@ services:
     image: "redis:alpine"
     hostname: "redis"
     depends_on:
-      - web
     restart: on-failure
 
   web:
@@ -32,6 +31,7 @@ services:
   celery:
     build: .
     command: celery -A core worker -B --scheduler django -l INFO -f celery_log.txt
+    entrypoint: "/usr/src/app/entrypoint.sh"
     env_file:
       - ./.env.dev
     volumes:

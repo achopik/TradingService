@@ -7,7 +7,7 @@ from trading.trader.trade_worker import perform_trade
 
 @shared_task()
 def search_offers():
-    for offer in Offer.objects.exclude(is_active=False):
+    for offer in Offer.objects.filter(is_active=True):
 
         second_offer_id = find_pair_offer(offer.id)
         if not second_offer_id:

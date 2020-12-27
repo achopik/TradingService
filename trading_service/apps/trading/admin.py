@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from trading.models import (
+from .models import (
     Balance,
     Currency,
     Inventory,

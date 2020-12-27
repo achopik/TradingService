@@ -15,7 +15,7 @@ exclude = '''
   | blib2to3
   | tests/data
   | profiling
-  | trading_service/trading/migrations
+  | \trading_service\trading\migrations
 )/
 '''
 

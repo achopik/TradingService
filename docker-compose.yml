@@ -13,9 +13,8 @@ services:
     restart: on-failure
 
   web:
-    build: .
+    build: ./trading_service
     entrypoint: "/usr/src/app/entrypoint.sh"
-    container_name: web
     volumes:
       - .:/usr/src/app/
     ports:
@@ -27,7 +26,7 @@ services:
     restart: on-failure
 
   celery:
-    build: .
+    build: ./trading_service
     command: celery -A core worker -B --scheduler django -l INFO -f celery_log.txt
     env_file:
       - ./.env.dev

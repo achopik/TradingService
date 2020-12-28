@@ -12,12 +12,8 @@ then
     echo "PostgreSQL started"
 fi
 
-python sources/manage.py migrate
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
 
-if [ "$DJANGO_SUPERUSER_USERNAME" ]
-then
-    echo "Creating admin..."
-    python sources/manage.py createsuperuser --noinput
-fi
 
 exec "$@"

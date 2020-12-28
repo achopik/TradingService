@@ -4,20 +4,17 @@ services:
   db:
     image: postgres:12.0-alpine
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data/
+      - ../postgres_data:/var/lib/postgresql/data/
     restart: on-failure
 
   redis:
     image: "redis:alpine"
     hostname: "redis"
-    depends_on:
-      - db
     restart: on-failure
 
   web:
     build: .
     entrypoint: "/usr/src/app/entrypoint.sh"
-    command: python sources/manage.py runserver 0.0.0.0:8000
     container_name: web
     volumes:
       - .:/usr/src/app/
@@ -31,12 +28,11 @@ services:
 
   celery:
     build: .
-    command: celery --workdir sources/ -A project worker -B --scheduler django -l INFO -f celery_log.txt
+    command: celery -A core worker -B --scheduler django -l INFO -f celery_log.txt
     env_file:
       - ./.env.dev
     volumes:
       - .:/usr/src/app/
     depends_on:
       - web
-      - db
     restart: on-failure

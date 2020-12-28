@@ -14,7 +14,6 @@ services:
 
   web:
     build: ./trading_service
-    entrypoint: "/usr/src/app/entrypoint.sh"
     volumes:
       - .:/usr/src/app/
     ports:

@@ -29,4 +29,3 @@ def validate_inventory(data):
     inventory = Inventory.objects.get_or_create(user=user, item=data['item'])[0]
     if inventory.quantity < data['entry_quantity'] - data['quantity']:
         raise serializers.ValidationError
-

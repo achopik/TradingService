@@ -11,6 +11,7 @@ from trading.models import (
     User,
     WatchList,
 )
+from trading.validators import validate_offer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -103,6 +104,14 @@ class OfferSerializer(BaseSerializer):
     class Meta:
         model = Offer
         fields = "__all__"
+
+    def validate(self, attrs):
+        """
+        Checks if user has enough money or items
+        """
+
+        validate_offer(attrs)
+        return attrs
 
 
 class InventorySerializer(BaseSerializer):

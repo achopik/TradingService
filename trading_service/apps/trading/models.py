@@ -154,3 +154,4 @@ class Trade(models.Model):
         related_name="buyer_trade",
         related_query_name="buyer_trade",
     )
+

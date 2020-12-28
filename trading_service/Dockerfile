@@ -1,6 +1,6 @@
 FROM python:3.8.3-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/
 COPY Pipfile /usr/src/app
 COPY Pipfile.lock /usr/src/app
 
@@ -14,5 +14,5 @@ RUN pip install pipenv
 RUN pipenv install --system --deploy
 
 COPY . /usr/src/app
-
-
+WORKDIR /usr/src/app/trading_service
+ENTRYPOINT ["/bin/sh", "entrypoint.sh"]

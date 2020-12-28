@@ -15,7 +15,6 @@ services:
   web:
     build: .
     entrypoint: "/usr/src/app/entrypoint.sh"
-    command: python manage.py runserver 0.0.0.0:8000
     container_name: web
     volumes:
       - .:/usr/src/app/
@@ -30,7 +29,6 @@ services:
   celery:
     build: .
     command: celery -A core worker -B --scheduler django -l INFO -f celery_log.txt
-    entrypoint: "/usr/src/app/entrypoint.sh"
     env_file:
       - ./.env.dev
     volumes:

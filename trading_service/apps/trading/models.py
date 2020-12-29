@@ -2,6 +2,7 @@ from enum import Enum
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.dispatch import receiver
 
 
 class OrderType(Enum):
@@ -94,7 +95,7 @@ class Offer(models.Model):
         choices=OrderType.choices(), default=OrderType.SELL, max_length=6
     )
     price = models.DecimalField(max_digits=7, decimal_places=2)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
 
 
 class Balance(models.Model):
@@ -154,3 +155,12 @@ class Trade(models.Model):
         related_name="buyer_trade",
         related_query_name="buyer_trade",
     )
+
+
+@receiver(models.signals.pre_save, sender=Offer)
+def update_offer(sender, instance, created, **kwargs):
+
+    if not instance.user.profile.is_confirmed:
+        instance.is_active = False
+    elif instance.quantuty != instance.entry_quantity:
+        instance.is_active = True

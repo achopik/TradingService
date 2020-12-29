@@ -1,5 +1,4 @@
 from rest_framework import mixins, viewsets
-from rest_framework import validators
 
 
 from trading.models import (

@@ -1,10 +1,10 @@
-from django.shortcuts import render
 from django.contrib.auth.forms import AuthenticationForm
-from django.views.generic import FormView
+from django.shortcuts import render
 from django.views import View
+from django.views.generic import FormView
 
-from .forms import RegistrationForm
-from .tasks import check_user_verification
+from registration.forms import RegistrationForm
+from registration.tasks import check_user_verification
 
 
 class RegistrationView(FormView):
@@ -18,17 +18,16 @@ class RegistrationView(FormView):
 
 
 class ActivationView(View):
-
     def get(self, request, uidb64, token):
 
         context = {
-            'form': AuthenticationForm(),
-            'message': 'Registration confirmation error. '
-                       'Please click the reset password to '
-                       'generate a new confirmation email.'
+            "form": AuthenticationForm(),
+            "message": "Registration confirmation error. "
+            "Please click the reset password to "
+            "generate a new confirmation email.",
         }
 
         if check_user_verification.delay(uidb64, token):
-            context['message'] = 'Registration complete. Please login'
+            context["message"] = "Registration complete. Please login"
 
-        return render(request, 'registration/login.html', context)
+        return render(request, "registration/login.html", context)

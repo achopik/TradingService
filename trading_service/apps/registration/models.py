@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from registration.tasks import send_confirmation_mail
+# from registration.tasks import send_confirmation_mail
 
 
 class Profile(models.Model):
@@ -23,4 +23,3 @@ def update_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
         instance.profile.save()
-        send_confirmation_mail.delay(instance.id)

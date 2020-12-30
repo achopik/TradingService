@@ -41,5 +41,5 @@ def check_user_verification(uidb64, token):
 
     if user and profile_activation_token.check_token(user, token):
         user.profile.is_confirmed = True
-        user.save()
+        user.profile.save()
         return True

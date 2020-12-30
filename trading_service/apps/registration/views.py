@@ -27,7 +27,8 @@ class ActivationView(View):
             "generate a new confirmation email.",
         }
 
-        if check_user_verification.delay(uidb64, token):
+        res = check_user_verification.delay(uidb64, token)
+        if res.get():
             context["message"] = "Registration complete. Please login"
 
         return render(request, "registration/login.html", context)

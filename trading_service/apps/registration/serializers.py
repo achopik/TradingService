@@ -51,6 +51,9 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
     def validate(self, attrs):
 
+        password1 = attrs['new_password1']
+        password2 = attrs['new_password2']
+
         try:
             token = self.context.get('view').kwargs['token']
             uid = check_token(token)
@@ -58,12 +61,13 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             raise ValidationError({'token': ['Invalid value']})
 
-        if self.new_password1 and self.new_password2:
-            if self.new_password1 != self.new_password2:
+        if password1 and password2:
+            if password1 != password2:
                 raise ValidationError("Passwords don't match")
-        password_validation.validate_password(self.new_password1, self.user)
+        password_validation.validate_password(password1, self.user)
+        self.password = password1
         return attrs
 
     def save(self):
-        self.user.set_password(self.new_password1)
+        self.user.set_password(self.password)
         self.user.save()

@@ -31,4 +31,3 @@ def _get_user_id(token) -> Union[int, bool]:
 
     except TokenError:
         return False
-

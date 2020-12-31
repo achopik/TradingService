@@ -17,20 +17,29 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "trading",
+]
 
+LOCAL_APPS = [
+    "trading",
+    "registration",
+]
+
+THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework.authtoken",
     "django_celery_beat",
 ]
+
+
+INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 
 MIDDLEWARE = [
@@ -48,7 +57,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR + "/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -114,7 +123,8 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-# 3rd party modules configs
+
+# DRF configs
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -131,6 +141,9 @@ JWT_EXPIRATION_TIME = datetime.timedelta(days=int(os.environ.get("JWT_EXP_DAYS")
 
 JWT_AUTH = {"JWT_EXPIRATION_DELTA": JWT_EXPIRATION_TIME}
 
+
+# Celery configs
+
 CELERY_BROKER_URL = "redis://redis:6379"
 
 CELERY_ACCEPT_CONTENT = ["application/json"]
@@ -143,6 +156,15 @@ CELERY_BEAT_SCHEDULE = {
 
     'search-offers-every-minute': {
         'task': 'trading.tasks.search_offers',
-        'schedule': 60.0,
+        'schedule': 6000.0,
     },
 }
+
+
+# Mailing configs
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT'))

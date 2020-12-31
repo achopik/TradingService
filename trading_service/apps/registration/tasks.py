@@ -32,7 +32,7 @@ def send_confirmation_mail(user_id):
     mail.send()
 
 
-@shared_task()
+@shared_task
 def send_password_reset_mail(user_id):
     user = User.objects.get(id=user_id)
     token = create_token(user)

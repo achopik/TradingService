@@ -16,7 +16,7 @@ def perform_trade(seller_offer_id: int, buyer_offer_id: int):
 
     trade_id = _create_trade(seller_offer_id, buyer_offer_id)
     if not trade_id:
-        return
+        raise Trade.DoesNotExist
     trade = Trade.objects.get(id=trade_id)
 
     seller = trade.seller

@@ -1,16 +1,12 @@
-from django.views.decorators.debug import sensitive_post_parameters
-
 from registration.serializers import (
-    UserRegisterSerializer,
     PasswordResetConfirmSerializer,
     PasswordResetSerializer,
-
+    UserRegisterSerializer,
 )
-
-from registration.tokens import check_token, activate_user_profile
 from registration.tasks import send_confirmation_mail
+from registration.tokens import activate_user_profile, check_token
 
-from rest_framework import status, generics
+from rest_framework import generics, status
 from rest_framework.response import Response
 
 

@@ -1,6 +1,5 @@
 from rest_framework import mixins, viewsets
 
-
 from trading.models import (
     Balance,
     Currency,
@@ -15,10 +14,13 @@ from trading.serializers import (
     BalanceSerializer,
     CurrencySerializer,
     InventorySerializer,
+    ItemCreateSerializer,
     ItemSerializer,
+    OfferCreateSerializer,
     OfferSerializer,
     PriceSerializer,
     TradeSerializer,
+    WatchListCreateSerializer,
     WatchListSerializer,
 )
 
@@ -42,7 +44,11 @@ class ItemViewSet(
 ):
 
     queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+
+    def get_serializer_class(self):
+        if self.action == "retrieve" or self.action == "list":
+            return ItemSerializer
+        return ItemCreateSerializer
 
 
 class PriceViewSet(
@@ -63,7 +69,12 @@ class WatchListViewSet(
 ):
 
     queryset = WatchList.objects.all()
-    serializer_class = WatchListSerializer
+
+    def get_serializer_class(self):
+
+        if self.action == "retrieve":
+            return WatchListSerializer
+        return WatchListCreateSerializer
 
 
 class OfferViewSet(
@@ -75,7 +86,11 @@ class OfferViewSet(
 ):
 
     queryset = Offer.objects.all()
-    serializer_class = OfferSerializer
+
+    def get_serializer_class(self):
+        if self.action == "retrieve" or self.action == "list":
+            return OfferSerializer
+        return OfferCreateSerializer
 
 
 class InventoryViewSet(

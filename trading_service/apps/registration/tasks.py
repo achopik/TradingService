@@ -19,7 +19,8 @@ def send_confirmation_mail(user_id):
     )
 
     message = get_template("registration/activation_email.html").render(
-        {"activation_url": url}
+        {"activation_url": url,
+         "username": user.username}
     )
 
     mail = EmailMessage(
@@ -42,7 +43,8 @@ def send_password_reset_mail(user_id):
     )
 
     message = get_template("registration/reset_email.html").render(
-        {"confirm_url": url}
+        {"confirm_url": url,
+         "username": user.username}
     )
 
     mail = EmailMessage(

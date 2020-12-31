@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from django.contrib.auth.models import User
 
@@ -24,11 +24,11 @@ def create_token(user) -> str:
     return str(token)
 
 
-def _get_user_id(token) -> Optional[int]:
+def _get_user_id(token) -> Union[int, bool]:
     try:
         user_id = AccessToken(token, verify=True).get('user_id')
         return user_id
 
     except TokenError:
-        return
+        return False
 

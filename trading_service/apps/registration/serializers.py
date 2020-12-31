@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
 
 from rest_framework import serializers
@@ -29,7 +29,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return value
 
 
-
 class PasswordResetSerializer(serializers.Serializer):
 
     email = serializers.EmailField()
@@ -49,22 +48,22 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
     new_password1 = serializers.CharField(max_length=128)
     new_password2 = serializers.CharField(max_length=128)
-    password_form = SetPasswordForm
 
     def validate(self, attrs):
 
         try:
             token = self.context.get('view').kwargs['token']
             uid = check_token(token)
-            user = User.objects.get(id=uid)
+            self.user = User.objects.get(id=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             raise ValidationError({'token': ['Invalid value']})
 
-        self.form = self.password_form(user=user, data=attrs)
-        if not self.form.is_valid():
-            raise serializers.ValidationError(self.form.errors)
-
+        if self.new_password1 and self.new_password2:
+            if self.new_password1 != self.new_password2:
+                raise ValidationError("Passwords don't match")
+        password_validation.validate_password(self.new_password1, self.user)
         return attrs
 
     def save(self):
-        return self.form.save()
+        self.user.set_password(self.new_password1)
+        self.user.save()

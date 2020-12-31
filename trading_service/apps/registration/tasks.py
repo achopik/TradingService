@@ -48,7 +48,7 @@ def send_password_reset_mail(user_id):
     )
 
     mail = EmailMessage(
-        "Trading Service Email Confirmation",
+        "Trading Service Password Reset",
         message,
         to=[user.email],
         from_email=settings.EMAIL_HOST_USER,

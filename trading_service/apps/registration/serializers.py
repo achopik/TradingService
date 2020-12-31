@@ -26,6 +26,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Account with given email already exists"
             )
+        return value
+
 
 
 class PasswordResetSerializer(serializers.Serializer):

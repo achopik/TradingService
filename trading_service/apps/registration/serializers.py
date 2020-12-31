@@ -41,22 +41,18 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
     new_password1 = serializers.CharField(max_length=128)
     new_password2 = serializers.CharField(max_length=128)
-
     password_form = SetPasswordForm
 
     def validate(self, attrs):
 
         try:
             token = self.context.get('view').kwargs['token']
-            print('SER TOKEN: ', token)
             uid = check_token(token)
             user = User.objects.get(id=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             raise ValidationError({'token': ['Invalid value']})
 
-        self.form = self.password_form(
-            user=user, data=attrs
-        )
+        self.form = self.password_form(user=user, data=attrs)
         if not self.form.is_valid():
             raise serializers.ValidationError(self.form.errors)
 

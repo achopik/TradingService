@@ -37,8 +37,7 @@ class ActivationView(generics.RetrieveAPIView):
         message = {
             "detail": "Registration confirmation error. Please, try again",
         }
-        token = kwargs['token']
-        res = check_token(token)
+        res = check_token(kwargs['token'])
         if res:
             message["detail"] = "Registration complete. Please login"
             activate_user_profile(res)
@@ -55,7 +54,6 @@ class PasswordResetView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
@@ -74,5 +72,6 @@ class PasswordResetConfirmView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(
-            {"detail": "Password has been changed"}
+            {"detail": "Password has been changed"},
+            status=status.HTTP_200_OK
         )

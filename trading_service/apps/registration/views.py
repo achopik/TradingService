@@ -7,11 +7,13 @@ from registration.tasks import send_confirmation_mail
 from registration.tokens import check_token
 
 from rest_framework import generics, status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 
 class UserRegisterView(generics.CreateAPIView):
 
+    permission_classes = [AllowAny, ]
     serializer_class = UserRegisterSerializer
 
     def create(self, request, *args, **kwargs):
@@ -33,6 +35,8 @@ class UserRegisterView(generics.CreateAPIView):
 
 class ActivationView(generics.RetrieveAPIView):
 
+    permission_classes = [AllowAny, ]
+
     def get(self, request, *args, **kwargs):
         message = {
             "detail": "Registration confirmation error. Please, try again",
@@ -49,6 +53,7 @@ class ActivationView(generics.RetrieveAPIView):
 
 class PasswordResetView(generics.CreateAPIView):
 
+    permission_classes = [AllowAny, ]
     serializer_class = PasswordResetSerializer
 
     def post(self, request, *args, **kwargs):
@@ -64,6 +69,7 @@ class PasswordResetView(generics.CreateAPIView):
 
 class PasswordResetConfirmView(generics.CreateAPIView):
 
+    permission_classes = [AllowAny, ]
     serializer_class = PasswordResetConfirmSerializer
 
     def post(self, request, *args, **kwargs):

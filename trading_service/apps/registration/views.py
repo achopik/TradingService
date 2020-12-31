@@ -1,23 +1,22 @@
-from django.contrib.auth.models import User
-from django.shortcuts import render
-from django.views import View
+from django.views.decorators.debug import sensitive_post_parameters
 
-from registration.serializers import UserRegisterSerializer
+from registration.serializers import (
+    UserRegisterSerializer,
+    PasswordResetConfirmSerializer,
+    PasswordResetSerializer,
+
+)
+
+from registration.tokens import check_token, activate_user_profile
 from registration.tasks import send_confirmation_mail
-from registration.tokens import check_token
 
-from rest_framework import mixins, status, viewsets
+from rest_framework import status, generics
 from rest_framework.response import Response
 
 
-class UserRegisterViewSet(
-    mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
-):
+class UserRegisterView(generics.CreateAPIView):
 
     serializer_class = UserRegisterSerializer
-    queryset = User.objects.all()
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -36,14 +35,48 @@ class UserRegisterViewSet(
         )
 
 
-class ActivationView(View):
+class ActivationView(generics.RetrieveAPIView):
 
-    def get(self, request, token):
-        context = {
-            "message": "Registration confirmation error. " "Please, try again",
+    def get(self, request, *args, **kwargs):
+        message = {
+            "detail": "Registration confirmation error. Please, try again",
         }
+        token = kwargs['token']
         res = check_token(token)
         if res:
-            context["message"] = "Registration complete. Please login"
+            message["detail"] = "Registration complete. Please login"
+            activate_user_profile(res)
 
-        return render(request, "registration/login.html", context)
+        return Response(
+            message,
+            status=status.HTTP_200_OK
+        )
+
+
+class PasswordResetView(generics.CreateAPIView):
+
+    serializer_class = PasswordResetSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            {"detail": "Password reset e-mail has been sent."},
+            status=status.HTTP_200_OK
+        )
+
+
+class PasswordResetConfirmView(generics.CreateAPIView):
+
+    serializer_class = PasswordResetConfirmSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"detail": "Password has been changed"}
+        )

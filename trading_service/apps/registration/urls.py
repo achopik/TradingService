@@ -3,15 +3,21 @@ from django.urls import path
 from rest_framework.routers import SimpleRouter
 import rest_framework_simplejwt.views as jwt_views
 
-from registration.views import UserRegisterViewSet, ActivationView
+from registration.views import (
+    UserRegisterView,
+    ActivationView,
+    PasswordResetView,
+    PasswordResetConfirmView,
+)
 
-
-router = SimpleRouter()
-router.register("register", UserRegisterViewSet)
 
 # flake8: noqa: E501
 urlpatterns = [
     path("token/", jwt_views.TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", jwt_views.TokenRefreshView.as_view(), name="token_refresh"),
     path("activate/<str:token>/", ActivationView.as_view(), name="activate"),
-] + router.urls
+    path("register/", UserRegisterView.as_view(), name="register"),
+    path("reset-password/", PasswordResetView.as_view(), name="reset_password"),
+    path("reset-password/<str:token>/", PasswordResetConfirmView.as_view(), name="confirm_reset_password"),
+]
+

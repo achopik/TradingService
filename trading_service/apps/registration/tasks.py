@@ -30,3 +30,26 @@ def send_confirmation_mail(user_id):
     )
     mail.content_subtype = "html"
     mail.send()
+
+
+@shared_task()
+def send_password_reset_mail(user_id):
+    user = User.objects.get(id=user_id)
+    token = create_token(user)
+    url = "http://localhost:8000" + reverse(
+        "confirm_reset_password",
+        kwargs={"token": token}
+    )
+
+    message = get_template("registration/reset_email.html").render(
+        {"confirm_url": url}
+    )
+
+    mail = EmailMessage(
+        "Trading Service Email Confirmation",
+        message,
+        to=[user.email],
+        from_email=settings.EMAIL_HOST_USER,
+    )
+    mail.content_subtype = "html"
+    mail.send()

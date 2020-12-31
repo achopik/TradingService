@@ -31,3 +31,10 @@ def _get_user_id(token) -> Optional[int]:
 
     except TokenError:
         return
+
+
+def activate_user_profile(user_id):
+
+    user = User.objects.get(user_id)
+    user.profile.is_confirmed = True
+    user.profile.save()

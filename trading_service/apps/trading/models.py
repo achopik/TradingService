@@ -2,6 +2,7 @@ from enum import Enum
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.dispatch import receiver
 
 
 class OrderType(Enum):
@@ -18,8 +19,8 @@ class OrderType(Enum):
 class CodeBase(models.Model):
     """ Base class for Currency and Item models """
 
-    name = models.CharField(max_length=200, blank=False, unique=True)
-    code = models.CharField(max_length=10, blank=False, unique=True)
+    name = models.CharField(max_length=200, unique=True)
+    code = models.CharField(max_length=10, unique=True)
 
     class Meta:
         abstract = True
@@ -41,7 +42,7 @@ class Item(CodeBase):
 
     price = models.DecimalField(max_digits=7, decimal_places=2)
     currency = models.ForeignKey(
-        Currency, blank=True, on_delete=models.SET_DEFAULT, default=1
+        Currency, blank=True, null=True, on_delete=models.SET_NULL
     )
     details = models.TextField("Details", blank=True, null=True, max_length=512)
 
@@ -60,7 +61,7 @@ class Price(models.Model):
     )
 
     currency = models.ForeignKey(
-        Currency, on_delete=models.SET_DEFAULT, blank=True, default=1
+        Currency, on_delete=models.SET_NULL, blank=True, null=True
     )
 
     price = models.DecimalField(max_digits=7, decimal_places=2)
@@ -74,8 +75,8 @@ class Price(models.Model):
 class WatchList(models.Model):
     """ User's favorites """
 
-    user = models.OneToOneField(User, blank=False, on_delete=models.CASCADE)
-    item = models.ManyToManyField(Item, related_name="watchlist", blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    item = models.ManyToManyField(Item, blank=True, related_name="watchlist")
 
 
 class Offer(models.Model):
@@ -84,26 +85,22 @@ class Offer(models.Model):
     def __str__(self):
         return f"{self.order_type}: {self.item}"
 
-    user = models.ForeignKey(
-        User, blank=False, on_delete=models.CASCADE, default=User.objects.first().id
-    )
-    item = models.ForeignKey(Item, blank=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     entry_quantity = models.PositiveIntegerField("Requested quantity")
     quantity = models.PositiveIntegerField("Actual quantity")
     order_type = models.CharField(
         choices=OrderType.choices(), default=OrderType.SELL, max_length=6
     )
     price = models.DecimalField(max_digits=7, decimal_places=2)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
 
 
 class Balance(models.Model):
     """ Shows the amount of certain currency for user """
 
-    user = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE)
-    currency = models.ForeignKey(
-        Currency, blank=False, null=True, on_delete=models.SET_NULL
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    currency = models.ForeignKey(Currency, null=True, on_delete=models.SET_NULL)
     amount = models.DecimalField(max_digits=30, decimal_places=3, default=0)
 
 
@@ -154,3 +151,12 @@ class Trade(models.Model):
         related_name="buyer_trade",
         related_query_name="buyer_trade",
     )
+
+
+@receiver(models.signals.pre_save, sender=Offer)
+def update_offer(sender, instance, created, **kwargs):
+
+    if not instance.user.profile.is_confirmed:
+        instance.is_active = False
+    elif instance.quantuty != instance.entry_quantity:
+        instance.is_active = True

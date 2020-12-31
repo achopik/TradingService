@@ -4,7 +4,7 @@ from registration.serializers import (
     UserRegisterSerializer,
 )
 from registration.tasks import send_confirmation_mail
-from registration.tokens import activate_user_profile, check_token
+from registration.tokens import check_token
 
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -40,7 +40,6 @@ class ActivationView(generics.RetrieveAPIView):
         res = check_token(kwargs['token'])
         if res:
             message["detail"] = "Registration complete. Please login"
-            activate_user_profile(res)
 
         return Response(
             message,

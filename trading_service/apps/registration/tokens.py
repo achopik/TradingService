@@ -6,9 +6,9 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import AccessToken
 
 
-def check_token(token) -> Optional[bool]:
+def check_token(token) -> Optional[int]:
     """
-    Returns true and confirms user if token is valid and user exists
+    Returns user id and confirms user if token is valid and user exists
     """
 
     uid = _get_user_id(token)
@@ -16,7 +16,7 @@ def check_token(token) -> Optional[bool]:
     if uid and user:
         user.profile.is_confirmed = True
         user.profile.save()
-        return True
+        return uid
 
 
 def create_token(user) -> str:
@@ -32,9 +32,3 @@ def _get_user_id(token) -> Optional[int]:
     except TokenError:
         return
 
-
-def activate_user_profile(user_id):
-
-    user = User.objects.get(user_id)
-    user.profile.is_confirmed = True
-    user.profile.save()

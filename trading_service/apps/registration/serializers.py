@@ -21,6 +21,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             "email"
         )
 
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError(
+                "Account with given email already exists"
+            )
+
 
 class PasswordResetSerializer(serializers.Serializer):
 
@@ -28,7 +34,7 @@ class PasswordResetSerializer(serializers.Serializer):
 
     def validate_email(self, value):
         if not User.objects.filter(email=value).exists():
-            raise serializers.ValidationError('No account with given email')
+            raise serializers.ValidationError("No account with given email")
         return value
 
     def save(self, **kwargs):

@@ -111,6 +111,10 @@ class Inventory(models.Model):
     item = models.ForeignKey(Item, blank=False, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField("Stocks quantity", default=0)
 
+    class Meta:
+        verbose_name = "Inventory"
+        verbose_name_plural = "Inventories"
+
 
 class Trade(models.Model):
     """ Info about a certain transaction """

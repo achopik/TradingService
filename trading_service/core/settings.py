@@ -134,6 +134,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ),
+    "DEFAULT_PAGINATION_CLASS": 'rest_framework.pagination.LimitOffsetPagination',
+    "PAGE_SIZE": 10
 }
 
 JWT_EXPIRATION_TIME = datetime.timedelta(days=int(os.environ.get("JWT_EXP_DAYS")))

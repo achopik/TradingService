@@ -135,7 +135,15 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ),
     "DEFAULT_PAGINATION_CLASS": 'rest_framework.pagination.LimitOffsetPagination',
-    "PAGE_SIZE": 10
+    "PAGE_SIZE": 10,
+    'DEFAULT_THROTTLE_CLASSES': [
+            'rest_framework.throttling.AnonRateThrottle',
+            'rest_framework.throttling.UserRateThrottle'
+        ],
+    'DEFAULT_THROTTLE_RATES': {
+            'anon': '1000/day',
+            'user': '10000/day',
+    },
 }
 
 JWT_EXPIRATION_TIME = datetime.timedelta(days=int(os.environ.get("JWT_EXP_DAYS")))

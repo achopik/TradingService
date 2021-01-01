@@ -13,7 +13,7 @@ from rest_framework.response import Response
 
 class UserRegisterView(generics.CreateAPIView):
 
-    permission_classes = [AllowAny, ]
+    permission_classes = (AllowAny, )
     serializer_class = UserRegisterSerializer
 
     def create(self, request, *args, **kwargs):
@@ -35,7 +35,7 @@ class UserRegisterView(generics.CreateAPIView):
 
 class ActivationView(generics.RetrieveAPIView):
 
-    permission_classes = [AllowAny, ]
+    permission_classes = (AllowAny, )
 
     def get(self, request, *args, **kwargs):
         message = {
@@ -53,7 +53,7 @@ class ActivationView(generics.RetrieveAPIView):
 
 class PasswordResetView(generics.CreateAPIView):
 
-    permission_classes = [AllowAny, ]
+    permission_classes = (AllowAny, )
     serializer_class = PasswordResetSerializer
 
     def post(self, request, *args, **kwargs):
@@ -69,7 +69,7 @@ class PasswordResetView(generics.CreateAPIView):
 
 class PasswordResetConfirmView(generics.CreateAPIView):
 
-    permission_classes = [AllowAny, ]
+    permission_classes = (AllowAny, )
     serializer_class = PasswordResetConfirmSerializer
 
     def post(self, request, *args, **kwargs):

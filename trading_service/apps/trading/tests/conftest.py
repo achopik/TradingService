@@ -8,6 +8,7 @@ from trading.models import (
     Inventory,
     Item,
     Offer,
+    OrderType,
     Price,
     User,
     WatchList,
@@ -56,7 +57,12 @@ def balance_obj(currency_obj, user_obj):
 
 @pytest.fixture(scope="class")
 def offer_obj(item_obj, user_obj):
-    return mixer.blend(Offer, item=item_obj, user=user_obj, order_type="BUY")
+    return mixer.blend(
+        Offer,
+        item=item_obj,
+        user=user_obj,
+        order_type=OrderType.BUY.name
+    )
 
 
 @pytest.fixture(scope="class")
@@ -72,7 +78,7 @@ def seller_buyer(inventory_obj, balance_obj):
 def sell_buy_offers(seller_buyer, item_obj):
     seller_offer = mixer.blend(
         Offer,
-        order_type="SELL",
+        order_type=OrderType.SELL.name,
         user=seller_buyer[0],
         entry_quantity=10,
         quantity=5,
@@ -81,7 +87,7 @@ def sell_buy_offers(seller_buyer, item_obj):
     )
     buyer_offer = mixer.blend(
         Offer,
-        order_type="BUY",
+        order_type=OrderType.BUY.name,
         user=seller_buyer[1],
         entry_quantity=10,
         quantity=5,

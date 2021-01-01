@@ -80,6 +80,12 @@ class OfferSerializer(BaseSerializer):
         model = Offer
         fields = "__all__"
 
+
+class OfferCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Offer
+        exclude = ("is_active", )
+
     def validate(self, attrs):
         """
         Checks if user has enough money or items
@@ -87,12 +93,6 @@ class OfferSerializer(BaseSerializer):
 
         validate_offer(attrs)
         return attrs
-
-
-class OfferCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Offer
-        fields = "__all__"
 
 
 class InventorySerializer(BaseSerializer):

@@ -1,11 +1,11 @@
 from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
 
+from registration.tasks import send_password_reset_mail
+from registration.tokens import check_token
+
 from rest_framework import serializers
 from rest_framework.validators import ValidationError
-
-from .tasks import send_password_reset_mail
-from .tokens import check_token
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):

@@ -134,9 +134,23 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ),
+    "DEFAULT_PAGINATION_CLASS": 'rest_framework.pagination.LimitOffsetPagination',
+    "PAGE_SIZE": 10,
+    "DEFAULT_THROTTLE_CLASSES": [
+            'rest_framework.throttling.AnonRateThrottle',
+            'rest_framework.throttling.UserRateThrottle'
+        ],
+    "DEFAULT_THROTTLE_RATES": {
+            "anon": "1000/day",
+            "user": "10000/day",
+    },
 }
 
-JWT_EXPIRATION_TIME = datetime.timedelta(days=int(os.environ.get("JWT_EXP_DAYS")))
+JWT_EXPIRATION_TIME = datetime.timedelta(
+    days=int(os.environ.get("JWT_EXP_DAYS", default=7)),
+    minutes=int(os.environ.get("JWT_EXP_MINUTES", default=0)),
+    seconds=int(os.environ.get("JWT_EXP_SECONDS", default=0)),
+)
 
 
 JWT_AUTH = {"JWT_EXPIRATION_DELTA": JWT_EXPIRATION_TIME}

@@ -121,7 +121,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = "/static/"
+# Static files
+
+STATIC_URL = "/staticfiles/"
+STATIC_ROOT = BASE_DIR + "/staticfiles/"
 
 
 # DRF configs

@@ -3,17 +3,20 @@ services:
 
   db:
     image: postgres:12.0-alpine
+    container_name: db
     volumes:
       - ./postgres_data:/var/lib/postgresql/data/
     restart: on-failure
 
   redis:
     image: "redis:alpine"
+    container_name: redis
     hostname: "redis"
     restart: on-failure
 
-  web:
+  app:
     build: ./trading_service
+    container_name: app
     volumes:
       - .:/usr/src/app/
     ports:
@@ -26,11 +29,22 @@ services:
 
   celery:
     build: ./trading_service
+    container_name: celery
     entrypoint: celery -A core worker -B --scheduler django -l INFO -f celery_log.txt
     env_file:
       - ./.env.dev
     volumes:
       - .:/usr/src/app/
     depends_on:
-      - web
+      - app
     restart: on-failure
+
+  nginx:
+    image: nginx:1.17
+    container_name: ngx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app

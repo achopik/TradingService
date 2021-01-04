@@ -13,7 +13,7 @@ def search_offers():
         if not second_offer_id:
             continue
         try:
-            if offer.order_type == OrderType.SELL:
+            if offer.order_type == OrderType.SELL.name:
                 perform_trade(offer.id, second_offer_id)
             else:
                 perform_trade(second_offer_id, offer.id)

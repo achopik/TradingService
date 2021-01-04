@@ -1,4 +1,4 @@
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, permissions, viewsets
 
 from trading.models import (
     Balance,
@@ -101,6 +101,7 @@ class InventoryViewSet(
 
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
+    permission_classes = (permissions.IsAdminUser, )
 
 
 class TradeViewSet(
@@ -121,3 +122,4 @@ class BalanceViewSet(
 
     queryset = Balance.objects.all()
     serializer_class = BalanceSerializer
+    permission_classes = (permissions.IsAdminUser,)

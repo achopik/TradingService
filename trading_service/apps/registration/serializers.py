@@ -1,11 +1,11 @@
 from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
 
+from registration.tasks import send_password_reset_mail
+from registration.tokens import check_token
+
 from rest_framework import serializers
 from rest_framework.validators import ValidationError
-
-from .tasks import send_password_reset_mail
-from .tokens import check_token
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -21,7 +21,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             "email"
         )
 
-    def validate_email(self, value):
+    @staticmethod
+    def validate_email(value):
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError(
                 "Account with given email already exists"
@@ -33,7 +34,8 @@ class PasswordResetSerializer(serializers.Serializer):
 
     email = serializers.EmailField()
 
-    def validate_email(self, value):
+    @staticmethod
+    def validate_email(value):
         if not User.objects.filter(email=value).exists():
             raise serializers.ValidationError("No account with given email")
         return value
@@ -42,6 +44,12 @@ class PasswordResetSerializer(serializers.Serializer):
         email = self.data['email']
         user = User.objects.get(email=email)
         send_password_reset_mail.delay(user.id)
+
+    def update(self, instance, validated_data):
+        pass  # No instances to update
+
+    def create(self, validated_data):
+        pass  # No instances to create
 
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
@@ -71,3 +79,9 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     def save(self):
         self.user.set_password(self.password)
         self.user.save()
+
+    def create(self, validated_data):
+        pass  # No instances to update
+
+    def update(self, instance, validated_data):
+        pass  # No instances to create

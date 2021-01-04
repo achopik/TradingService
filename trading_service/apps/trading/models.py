@@ -88,7 +88,7 @@ class Offer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     entry_quantity = models.PositiveIntegerField("Requested quantity")
-    quantity = models.PositiveIntegerField("Actual quantity")
+    quantity = models.PositiveIntegerField("Actual quantity", default=0)
     order_type = models.CharField(
         choices=OrderType.choices(), default=OrderType.SELL, max_length=6
     )
@@ -110,6 +110,10 @@ class Inventory(models.Model):
     user = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, blank=False, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField("Stocks quantity", default=0)
+
+    class Meta:
+        verbose_name = "Inventory"
+        verbose_name_plural = "Inventories"
 
 
 class Trade(models.Model):
@@ -154,7 +158,7 @@ class Trade(models.Model):
 
 
 @receiver(models.signals.pre_save, sender=Offer)
-def update_offer(sender, instance, created, **kwargs):
+def update_offer(sender, instance, **kwargs):
 
     if not instance.user.profile.is_confirmed:
         instance.is_active = False

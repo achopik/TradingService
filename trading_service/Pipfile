@@ -15,6 +15,7 @@ redis = "*"
 pytest-django = "*"
 mixer = "*"
 django-celery-beat = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"

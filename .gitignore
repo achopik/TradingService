@@ -6,3 +6,4 @@ postgres_data
 *logs.txt
 celerybeat-schedule
 /test.http
+/trading_service/staticfiles/

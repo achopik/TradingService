@@ -19,9 +19,8 @@ def find_pair_offer(first_offer_id: int) -> Union[int, bool]:
 
     first_offer = Offer.objects.get(id=first_offer_id)
     second_offer = (
-        Offer.objects.exclude(
-            order_type__exact=first_offer.order_type,
-        )
+        Offer.objects
+        .exclude(order_type__exact=first_offer.order_type)
         .exclude(is_active=False)
         .exclude(user=first_offer.user)
     )
@@ -69,15 +68,11 @@ def _create_trade(seller_offer_id: int, buyer_offer_id: int) -> Union[int, bool]
 
     amount = trade.quantity * trade.unit_price
 
-    try:
-        assert (
-            _check_balance(trade.buyer.id, trade.item.currency.id) >= amount
-        ), "Buyer has not enough currency"
-
-        assert (
-            _check_inventory(trade.seller.id, trade.item.id) >= trade.quantity
-        ), "Seller has not enough items in inventory"
-    except AssertionError:
+    if (_check_balance(trade.buyer.id, trade.item.currency.id) >= amount or
+            _check_inventory(trade.seller.id, trade.item.id) >= trade.quantity):
+        """
+        Deletes trade if user has not enough money / items
+        """
         trade.delete()
         return False
 
@@ -146,7 +141,6 @@ def _change_offer_quantity(offer_id: int, delta: int):
 
 
 def _change_price(item_id: int, new_price: float):
-
     item = Item.objects.get(pk=item_id)
     price = Price.objects.create(
         item=item, currency=item.currency, price=new_price, date=datetime.now()

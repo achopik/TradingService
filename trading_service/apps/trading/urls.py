@@ -8,12 +8,12 @@ from trading.views import (
     BalanceViewSet,
     CurrencyViewSet,
     InventoryViewSet,
+    ItemStatisticsViewSet,
     ItemViewSet,
     OfferViewSet,
     PriceViewSet,
     TradeViewSet,
     WatchListViewSet,
-    ItemStatisticsViewSet,
 )
 
 router = SimpleRouter()

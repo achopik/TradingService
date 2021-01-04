@@ -158,7 +158,7 @@ class Trade(models.Model):
 
 
 class ItemStats(models.Model):
-    item = models.OneToOneField(Item, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(auto_now_add=True)
     average_price = models.DecimalField(max_digits=30, decimal_places=3, default=0)
     minimum_price = models.DecimalField(max_digits=30, decimal_places=3, default=0)

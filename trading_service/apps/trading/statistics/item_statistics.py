@@ -1,12 +1,13 @@
-from django.db.models import Avg, Min, Max, Q
-from trading.models import Item, Offer, ItemStats
+from django.db.models import Avg, Max, Min, Q
+
+from trading.models import Item, ItemStats, Offer
 
 
 def update_item_statistics(item_id: int):
-    stats = ItemStats.create(item_id=item_id)
+    stats = ItemStats.objects.create(item=Item.objects.get(id=item_id))
     calculations = _get_all_item_price_values(item_id)
 
-    if calculations:
+    if None not in calculations.values():
         stats.average_price = calculations['price__avg']
         stats.minimum_price = calculations['price__min']
         stats.maximum_price = calculations['price__max']
@@ -14,20 +15,6 @@ def update_item_statistics(item_id: int):
     stats.save()
 
 
-def safe_aggregation(fn):
-    """
-    Decorator handles DoesNotExist exception for offer-searching functions
-    """
-    def wrapper():
-        try:
-            return fn()
-        except Offer.DoesNotExist:
-            return 0
-
-    return wrapper
-
-
-@safe_aggregation
 def _get_all_item_price_values(item_id: int) -> dict:
     return (
         Offer.objects

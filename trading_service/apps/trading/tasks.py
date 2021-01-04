@@ -1,6 +1,6 @@
 from celery import shared_task
 
-from trading.models import Offer, OrderType, Trade, Item
+from trading.models import Item, Offer, OrderType, Trade
 from trading.statistics.item_statistics import (
     update_item_statistics
 )
@@ -26,5 +26,5 @@ def search_offers():
 
 @shared_task()
 def update_offer_stats():
-    for item in Item.objects.all:
+    for item in Item.objects.all():
         update_item_statistics(item.id)

@@ -177,7 +177,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'update-item-stats-every-15-seconds': {
         'task': 'trading.tasks.update_offer_stats',
-        'schedule': 15.0,
+        'schedule': 6000.0,
     }
 }
 

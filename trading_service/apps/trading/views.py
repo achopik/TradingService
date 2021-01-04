@@ -6,11 +6,11 @@ from trading.models import (
     Currency,
     Inventory,
     Item,
+    ItemStats,
     Offer,
     Price,
     Trade,
     WatchList,
-    ItemStats
 )
 from trading.serializers import (
     BalanceSerializer,
@@ -18,13 +18,13 @@ from trading.serializers import (
     InventorySerializer,
     ItemCreateSerializer,
     ItemSerializer,
+    ItemStatsSerializer,
     OfferCreateSerializer,
     OfferSerializer,
     PriceSerializer,
     TradeSerializer,
     WatchListCreateSerializer,
     WatchListSerializer,
-    ItemStatsSerializer
 )
 
 

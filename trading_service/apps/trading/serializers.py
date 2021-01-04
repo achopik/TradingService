@@ -5,12 +5,12 @@ from trading.models import (
     Currency,
     Inventory,
     Item,
+    ItemStats,
     Offer,
     Price,
     Trade,
     User,
     WatchList,
-    ItemStats,
 )
 from trading.validators import validate_offer
 

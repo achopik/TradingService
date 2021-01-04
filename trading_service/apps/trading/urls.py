@@ -13,6 +13,7 @@ from trading.views import (
     PriceViewSet,
     TradeViewSet,
     WatchListViewSet,
+    ItemStatisticsViewSet,
 )
 
 router = SimpleRouter()
@@ -24,6 +25,7 @@ router.register("inventory", InventoryViewSet)
 router.register("offer", OfferViewSet)
 router.register("trade", TradeViewSet)
 router.register("balance", BalanceViewSet)
+router.register("item/statistics", ItemStatisticsViewSet)
 
 
 urlpatterns = [

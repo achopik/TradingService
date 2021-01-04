@@ -10,6 +10,7 @@ from trading.models import (
     Trade,
     User,
     WatchList,
+    ItemStats,
 )
 from trading.validators import validate_offer
 
@@ -117,4 +118,13 @@ class BalanceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Balance
+        fields = "__all__"
+
+
+class ItemStatsSerializer(serializers.ModelSerializer):
+
+    item = ItemSerializer(read_only=True)
+
+    class Meta:
+        model = ItemStats
         fields = "__all__"

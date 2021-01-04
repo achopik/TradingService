@@ -171,10 +171,14 @@ CELERY_RESULT_BACKEND = "redis://redis:6379"
 
 CELERY_BEAT_SCHEDULE = {
 
-    'search-offers-every-minute': {
+    'perform-offers-every-minute': {
         'task': 'trading.tasks.search_offers',
         'schedule': 6000.0,
     },
+    'update-item-stats-every-15-seconds': {
+        'task': 'trading.tasks.update_offer_stats',
+        'schedule': 15.0,
+    }
 }
 
 

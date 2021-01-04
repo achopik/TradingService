@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import Optional, Union
 
+from django.db.models import Q
+
 from trading.models import (
     Balance,
     Inventory,
@@ -19,10 +21,11 @@ def find_pair_offer(first_offer_id: int) -> Union[int, bool]:
 
     first_offer = Offer.objects.get(id=first_offer_id)
     second_offer = (
-        Offer.objects
-        .exclude(order_type__exact=first_offer.order_type)
-        .exclude(is_active=False)
-        .exclude(user=first_offer.user)
+        Offer.objects.filter(
+            ~Q(order_type=first_offer.order_type),
+            Q(is_active=True),
+            ~Q(user=first_offer.user)
+        )
     )
     try:
         second_offer = second_offer.order_by("price")

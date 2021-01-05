@@ -20,6 +20,7 @@ from trading.serializers import (
     OfferCreateSerializer,
     OfferSerializer,
     PriceSerializer,
+    PrivateStatsSerializer,
     TradeSerializer,
     WatchListCreateSerializer,
     WatchListSerializer,
@@ -136,4 +137,19 @@ class ItemStatisticsViewSet(
         return Response({
             'statiscs': stats},
             status=status.HTTP_200_OK
+        )
+
+
+class UserStatisticsViewSet(
+    viewsets.GenericViewSet,
+):
+
+    serializer_class = PrivateStatsSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(
+            serializer.create(serializer.data),
+            status=status.HTTP_200_OK,
         )

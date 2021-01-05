@@ -134,9 +134,10 @@ class PrivateStatsSerializer(serializers.Serializer):
         try:
             Item.objects.get(id=attrs['item_id'])
         except Item.DoesNotExist:
-            raise serializers.ValidationError(
-                "Item with given id does not exist"
-            )
+            if attrs['item_id'] is not None:
+                raise serializers.ValidationError(
+                    "Item with given id does not exist"
+                )
         if attrs['from_date'] and attrs['to_date']:
             if attrs['from_date'] > attrs['to_date']:
                 raise serializers.ValidationError(

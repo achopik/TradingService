@@ -25,7 +25,7 @@ router.register("inventory", InventoryViewSet)
 router.register("offer", OfferViewSet)
 router.register("trade", TradeViewSet)
 router.register("balance", BalanceViewSet)
-router.register("item/statistics", ItemStatisticsViewSet)
+router.register("item/statistics", ItemStatisticsViewSet, basename='item-statistics')
 
 
 urlpatterns = [

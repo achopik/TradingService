@@ -157,18 +157,6 @@ class Trade(models.Model):
     )
 
 
-class ItemStats(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    creation_date = models.DateTimeField(auto_now_add=True)
-    average_price = models.DecimalField(max_digits=30, decimal_places=3, default=0)
-    minimum_price = models.DecimalField(max_digits=30, decimal_places=3, default=0)
-    maximum_price = models.DecimalField(max_digits=30, decimal_places=3, default=0)
-
-    class Meta:
-        verbose_name = "ItemStat"
-        verbose_name_plural = "ItemStats"
-
-
 @receiver(models.signals.pre_save, sender=Offer)
 def update_offer(sender, instance, **kwargs):
 

@@ -1,9 +1,6 @@
 from celery import shared_task
 
-from trading.models import Item, Offer, OrderType, Trade
-from trading.statistics.item_statistics import (
-    update_item_statistics
-)
+from trading.models import Offer, OrderType, Trade
 from trading.trader.db_requests import find_pair_offer
 from trading.trader.trade_worker import perform_trade
 
@@ -22,9 +19,3 @@ def search_offers():
                 perform_trade(second_offer_id, offer.id)
         except Trade.DoesNotExist:
             continue
-
-
-@shared_task()
-def update_offer_stats():
-    for item in Item.objects.all():
-        update_item_statistics(item.id)

@@ -175,10 +175,6 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'trading.tasks.search_offers',
         'schedule': 6000.0,
     },
-    'update-item-stats-every-15-seconds': {
-        'task': 'trading.tasks.update_offer_stats',
-        'schedule': 6000.0,
-    }
 }
 
 

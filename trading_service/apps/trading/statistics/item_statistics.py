@@ -1,18 +1,15 @@
 from django.db.models import Avg, Max, Min, Q
 
-from trading.models import Item, ItemStats, Offer
+from trading.models import Offer
 
 
-def update_item_statistics(item_id: int):
-    stats = ItemStats.objects.create(item=Item.objects.get(id=item_id))
-    calculations = _get_all_item_price_values(item_id)
+def get_item_statistics(item_id: int):
+    statistics = _get_all_item_price_values(item_id)
 
-    if None not in calculations.values():
-        stats.average_price = calculations['price__avg']
-        stats.minimum_price = calculations['price__min']
-        stats.maximum_price = calculations['price__max']
-
-    stats.save()
+    if None in statistics.values():
+        for key in statistics.keys():
+            statistics[key] = 0
+    return statistics
 
 
 def _get_all_item_price_values(item_id: int) -> dict:

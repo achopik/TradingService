@@ -145,6 +145,7 @@ class UserStatisticsViewSet(
 ):
 
     serializer_class = PrivateStatsSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

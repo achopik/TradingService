@@ -139,6 +139,7 @@ class Trade(models.Model):
     quantity = models.PositiveIntegerField()
     unit_price = models.DecimalField(max_digits=7, decimal_places=2)
     description = models.TextField(blank=True, null=True)
+    creation_time = models.DateTimeField(auto_now_add=True)
     seller_offer = models.ForeignKey(
         Offer,
         blank=True,

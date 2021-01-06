@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "UTC+3"
 
 USE_I18N = True
 
@@ -171,9 +171,9 @@ CELERY_RESULT_BACKEND = "redis://redis:6379"
 
 CELERY_BEAT_SCHEDULE = {
 
-    'search-offers-every-minute': {
+    'perform-offers-every-minute': {
         'task': 'trading.tasks.search_offers',
-        'schedule': 6000.0,
+        'schedule': 60.0,
     },
 }
 

@@ -30,7 +30,7 @@ services:
   celery:
     build: ./trading_service
     container_name: celery
-    entrypoint: celery -A core worker -B --scheduler django -l INFO -f celery_log.txt
+    entrypoint: sh -c "sleep 10 && celery -A core worker -B --scheduler django -l INFO -f celery_log.txt"
     env_file:
       - ./.env.dev
     volumes:

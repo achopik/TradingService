@@ -8,10 +8,12 @@ from trading.views import (
     BalanceViewSet,
     CurrencyViewSet,
     InventoryViewSet,
+    ItemStatisticsViewSet,
     ItemViewSet,
     OfferViewSet,
     PriceViewSet,
     TradeViewSet,
+    UserStatisticsViewSet,
     WatchListViewSet,
 )
 
@@ -24,6 +26,8 @@ router.register("inventory", InventoryViewSet)
 router.register("offer", OfferViewSet)
 router.register("trade", TradeViewSet)
 router.register("balance", BalanceViewSet)
+router.register("item-statistics", ItemStatisticsViewSet, basename='item-statistics')
+router.register("user-statistics", UserStatisticsViewSet, basename='user-statistics')
 
 
 urlpatterns = [

@@ -1,4 +1,5 @@
-from rest_framework import mixins, permissions, viewsets
+from rest_framework import mixins, permissions, status, viewsets
+from rest_framework.response import Response
 
 from trading.models import (
     Balance,
@@ -19,10 +20,12 @@ from trading.serializers import (
     OfferCreateSerializer,
     OfferSerializer,
     PriceSerializer,
+    PrivateStatsSerializer,
     TradeSerializer,
     WatchListCreateSerializer,
     WatchListSerializer,
 )
+from trading.statistics.item_statistics import get_item_statistics
 
 
 class CurrencyViewSet(
@@ -123,3 +126,31 @@ class BalanceViewSet(
     queryset = Balance.objects.all()
     serializer_class = BalanceSerializer
     permission_classes = (permissions.IsAdminUser,)
+
+
+class ItemStatisticsViewSet(
+    viewsets.GenericViewSet
+):
+
+    def retrieve(self, request, *args, **kwargs):
+        stats = get_item_statistics(kwargs['pk'])
+        return Response({
+            'statiscs': stats},
+            status=status.HTTP_200_OK
+        )
+
+
+class UserStatisticsViewSet(
+    viewsets.GenericViewSet,
+):
+
+    serializer_class = PrivateStatsSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(
+            serializer.create(serializer.data),
+            status=status.HTTP_200_OK,
+        )
